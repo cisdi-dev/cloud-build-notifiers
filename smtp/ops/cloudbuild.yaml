@@ -33,7 +33,7 @@ steps:
   - '--service-account=${_SERVICE_ACCOUNT}'
 
 substitutions:
-  _ARTIFACT_REGISTRY_URL: asia-southeast2-docker.pkg.dev/website-production-cisdi/cisdi-dev-repo/cloud-build-notifiers/smtp:ops-
+  _ARTIFACT_REGISTRY_URL: asia-southeast2-docker.pkg.dev/website-production-cisdi/cisdi-dev-repo/cloud-build-notifiers/smtp:ops-v1.1
   _SERVICE_ACCOUNT: cloud-build-notifier-sa@website-production-cisdi.iam.gserviceaccount.com
   _CONFIG_PATH: gs://cisdi-cloud-build-notifier-bkt/cloud-build-ops-notifier.yaml
   _BUCKET: gs://cisdi-cloud-build-notifier-bkt/
