@@ -1,0 +1,66 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+steps:
+- name: gcr.io/cloud-builders/docker
+  args:
+  - build
+  - --file=./smtp/Dockerfile
+  - '-t'
+  - '${_ARTIFACT_REGISTRY_URL}:ops-${SHORT_SHA}'
+  - '.'
+
+- name: gcr.io/cloud-builders/docker
+  args:
+    - push
+    - '${_ARTIFACT_REGISTRY_URL}:ops-${SHORT_SHA}'
+
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+  - 'run'
+  - 'deploy'
+  - 'cloud-build-ops-notifier'
+  - '--image=${_ARTIFACT_REGISTRY_URL}:ops-${SHORT_SHA}'
+  - '--region=asia-southeast2'
+  - '--update-env-vars=CONFIG_MAP=${_CONFIG_PATH},PROJECT_ID=${PROJECT_ID}'
+  - '--service-account=${_SERVICE_ACCOUNT}'
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: '/bin/bash'
+  args:
+  - '-c'
+  - |
+    cd smtp/ops
+    gsutil cp cloud-build-ops* ${_BUCKET}
+
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+  - 'run'
+  - 'deploy'
+  - 'cloud-build-ops-notifier'
+  - '--image=${_ARTIFACT_REGISTRY_URL}:ops-${SHORT_SHA}'
+  - '--region=asia-southeast2'
+  - '--update-env-vars=CONFIG_MAP=${_CONFIG_PATH},PROJECT_ID=${PROJECT_ID}'
+  - '--service-account=${_SERVICE_ACCOUNT}'
+
+substitutions:
+  _ARTIFACT_REGISTRY_URL: asia-southeast2-docker.pkg.dev/website-production-cisdi/cisdi-dev-repo/cloud-build-notifiers/smtp
+  _SERVICE_ACCOUNT: cloud-build-notifier-sa@website-production-cisdi.iam.gserviceaccount.com
+  _CONFIG_PATH: gs://cisdi-cloud-build-notifier-bkt/cloud-build-ops-notifier.yaml
+  _BUCKET: gs://cisdi-cloud-build-notifier-bkt/
+tags:
+- cloud-build-notifiers-smtp
+- ops-notifier
