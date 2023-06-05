@@ -4,6 +4,6 @@
   <p>from image {{.Build.Substitutions._APP_IMAGE}}</p>
   <p>Built from commit {{.Build.Substitutions._APP_GIT_COMMIT}} </p>
 
-  <p>Approval:  <a href="https://console.cloud.google.com/cloud-build/builds;region=global/{{.Build.Id}}?project={{.Build.ProjectId}}">Approval Link</a> </p>
+  <p>Approval:  <a href="https://console.cloud.google.com/cloud-build/builds;region={{.Build.Substitutions.LOCATION}}/{{.Build.Id}}?project={{.Build.ProjectId}}">Approval Link</a> </p>
 </body>
 </html>
