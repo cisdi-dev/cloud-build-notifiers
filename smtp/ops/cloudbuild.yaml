@@ -29,7 +29,7 @@ steps:
   - 'cloud-build-ops-notifier'
   - '--image=${_ARTIFACT_REGISTRY_URL}'
   - '--region=asia-southeast2'
-  - '--update-env-vars=CONFIG_MAP=${_CONFIG_PATH},PROJECT_ID=${PROJECT_ID}'
+  - '--update-env-vars=CONFIG_PATH="${_CONFIG_PATH}",PROJECT_ID="${PROJECT_ID}"'
   - '--service-account=${_SERVICE_ACCOUNT}'
 
 substitutions:
