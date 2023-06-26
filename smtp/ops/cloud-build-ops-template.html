@@ -1,9 +1,17 @@
 <html>
 <body>
-  <h2>Relase {{.Build.Substitutions._APP_NAME}} {{.Build.Substitutions._APP_ROLE}} {{.Build.Substitutions._APP_VERSION}}</h2>
-  <p>from image {{.Build.Substitutions._APP_IMAGE}}</p>
-  <p>Built from commit {{.Build.Substitutions._APP_GIT_COMMIT}} </p>
+  {{if eq .Params.buildStatus "PENDING"}}
+    <h2>Relase {{.Build.Substitutions._APP_NAME}} {{.Build.Substitutions._APP_ROLE}} {{.Build.Substitutions._APP_VERSION}}</h2>
+  
+    <p>from image {{.Build.Substitutions._APP_IMAGE}}</p>
+    <p>Built from commit {{.Build.Substitutions._APP_GIT_COMMIT}} </p>
 
-  <p>Approval:  <a href="https://console.cloud.google.com/cloud-build/builds;region=asia-southeast2/{{.Build.Id}}?project={{.Build.ProjectId}}">Approval Link</a> </p>
+    <p>Approval:  <a href="{{.Build.LogUrl}}">Approval Link</a> </p>
+  {{end}}
+
+  {{if eq .Params.buildStatus "FAILURE"}}
+    <h2>Build Failed</h2>
+    <p>Logs URL: <a href="{{.Build.LogUrl}}">Click Here</a></p>
+  {{end}}
 </body>
 </html>

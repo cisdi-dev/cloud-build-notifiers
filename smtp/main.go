@@ -184,7 +184,7 @@ func (s *smtpNotifier) buildEmail() (string, error) {
 	if build.Status.String() == "PENDING" {
 		subject = fmt.Sprintf("[Require Approval] Deployment %s %s %s to Production", build.Substitutions["_APP_NAME"], build.Substitutions["_APP_ROLE"], build.Substitutions["_APP_VERSION"])
 	} else {
-		subject = fmt.Sprintf("[Deployment %s] %s %s %s to Production", build.Status, build.Substitutions["_APP_NAME"], build.Substitutions["_APP_ROLE"], build.Substitutions["_APP_VERSION"])
+		subject = fmt.Sprintf("[%s] Cloud Builds", build.Status)
 	}
 
 	header := make(map[string]string)
